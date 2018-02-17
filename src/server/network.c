@@ -36,8 +36,8 @@ int new_server() // Inicia um server no endereço e porta definidos e retorna o 
 	cfg_t *cfg;
 	cfg_opt_t opts[] =
 	{
-		CFG_SIMPLE_STR("addr", addr),
-		CFG_SIMPLE_STR("port", port),
+		CFG_SIMPLE_STR("addr", &addr),
+		CFG_SIMPLE_STR("port", &port),
 		CFG_END()
 	};
 
