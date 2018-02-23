@@ -29,7 +29,6 @@ public class Network {
 			System.err.println(ex);
 			return false;
 		}
-
 	}
 
 	public void send(String msg) {
@@ -46,11 +45,11 @@ public class Network {
 		try {
 			while(this.clientRead.hasNextLine())
 				temp.append(this.clientRead.nextLine());
+			return temp.toString();
 			
 		} catch(Exception ex) {
 			System.err.println(ex);
 			return null;
 		}
-		return temp.toString();
 	}
 }
