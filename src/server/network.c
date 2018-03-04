@@ -1,8 +1,3 @@
-// TCC - SPN
-// Objetivo: Implementação da rede 
-// Autor: Adriano Ferreira
-// Ultima modificação: 17/02/2018
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,9 +11,6 @@
 #include <netdb.h>
 #include <confuse.h>
 
-#define BUFFER_READ 512
-#define BUFFER_SEND 128
-
 void error (char *msg)
 {
 	perror(msg);
@@ -31,6 +23,9 @@ int new_server() // Inicia um server no endereço e porta definidos e retorna o 
 	char *port, *addr;
 	struct addrinfo hints, *res, *res_top;
 
+	port = NULL;
+	addr = NULL;
+
 		// Carrega as configurações do arquivo
 
 	cfg_t *cfg;
@@ -41,9 +36,10 @@ int new_server() // Inicia um server no endereço e porta definidos e retorna o 
 		CFG_END()
 	};
 
+
 	cfg = cfg_init(opts, 0);
 	cfg_parse(cfg, "server.conf");
-	
+
 		// Configuração e chamada da addrinfo
 
 	memset(&hints , 0, sizeof(struct addrinfo));
@@ -92,9 +88,7 @@ int rec_msg(int sock, char *msg, int len) // Recebimento de info
 			switch(errno)
 			{
 				case EINTR: 
-					continue;
-				case EWOULDBLOCK:
-					return BUFFER_READ - len;    
+					continue;    
 			}
                         return -1;
                 }
@@ -103,8 +97,8 @@ int rec_msg(int sock, char *msg, int len) // Recebimento de info
 		len-=rec_len;
 
 	}while(len > 0);
-
-	return BUFFER_READ - len;
+	
+	return len;
 }
 
 int send_msg(int sock, char *msg) // Envio de info
@@ -133,11 +127,7 @@ int send_msg(int sock, char *msg) // Envio de info
 int new_client(int sockfd) // retorna o próximo cliente da fila
 {
 	int clientfd, client_len;
-	struct timeval tv;
 	struct sockaddr_storage client;
-
-	tv.tv_sec = 2;
-	tv.tv_usec = 0;
 		
 	client_len = sizeof(struct sockaddr_in);
 	if((clientfd = accept(sockfd, (struct sockaddr *)&client, &client_len)) < 0)
@@ -146,8 +136,6 @@ int new_client(int sockfd) // retorna o próximo cliente da fila
 			return -1;
 		error("Accept: ");
 	}	
-	setsockopt(clientfd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
 
 	return clientfd;
-	
 }
