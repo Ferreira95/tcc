@@ -1,0 +1,76 @@
+<html>
+	<head>
+
+		<title>Cadastro de usuário</title>
+		<meta charset = "utf8">
+		
+		<link rel="stylesheet" type="text/css" href="src/Css/style.css">
+
+		<style>
+
+		.cad
+		{
+			display: table;
+			margin: auto;
+			padding: 15px;
+			font-size: 16px;
+		}
+
+		.buttonCad
+		{
+				font-size: 16px;
+				background-color: #34495E;
+				color: white;
+				display: table;
+				margin: auto;
+				width: 80px;
+				height: 35px;
+		}
+
+		</style>
+
+		<script src = "src/JavaScript/JQuery.js"></script>
+		
+		<script>
+			$(document).ready( 
+			function()
+			{ 
+				$("#top").load("menu.html");
+				$("#head").load("login.html");
+				$("#foot").load("rodape.html");
+			});
+		</script>
+	</head>
+
+	<body>
+		<div id = "top">
+		</div>
+
+		<div id = "head">
+		</div>
+
+		<div id = "center">
+
+			<div id = "conteudo">
+				<h3 class ="cad">Torne-se um pesquisador Voluntário</h3><br>
+				<form action = "src/controlVolunteer.php" method = "post"> 					<div class ="cad">E-mail:<input type = "email" name = "email"></div>
+				<div class ="cad">Senha:<input type = "password" name = "password"></div>
+				<div class ="cad">Nome:<input type = "text" name = "name"></div>
+			
+				<div class ="cad"><input class = "buttonCad" type = "submit" name = "cadastrar" value = "Cadastrar"></div>
+				</form>
+			</div>
+			<div id = "heavy">
+				<h4>Passos</h4><br>
+				Insira os dados e realize o cadastro no sistema, em seguida
+				baixe e instale o software para desktop. A partir dai faça o login
+				no desktop e seu trabalho esta concluído.
+				<a href = "#">Download</a>
+			</div>
+		</div>
+
+		<div id ="foot">
+		</div>
+	</body>
+</html>
+

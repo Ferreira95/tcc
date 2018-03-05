@@ -1,0 +1,241 @@
+<html>
+	<head>
+		<title>SPN - Área do Administrador</title>
+		<meta charset = "utf8">
+	
+		<link rel="stylesheet" type="text/css" href="src/Css/style.css">
+
+		<style>
+			.list
+			{
+				width: 50%;
+				height: 100%;
+				color: #34495E;
+				float: left; 
+			}
+
+			.add
+			{
+				width: 50%;
+				height: 100%;
+				color: 	#34495E;
+				float: left;
+			}
+	
+			.select
+			{
+				width: 100%;
+				height: 100%;
+				color: 	#34495E;
+				float: left;
+
+			}
+
+			.title
+			{
+				padding-left: 10px;
+				color: 	#34495E;
+			}
+
+			
+	
+			.status
+			{
+				width: 100%;
+				padding: 10px;
+				color: #34495E;
+				text-align: center;
+			}			
+			
+			.manager
+			{
+				display: table;
+				margin: auto;
+				width: 100%;
+				font-size: 16px;	
+			}
+
+			.info
+			{
+				border: 2px solid #34495E;
+				color: 	#34495E;
+				height: 260px;
+				margin: 0px 10px 2px 10px;
+			}
+
+			.manager h5
+			{
+				display: table;
+				margin: auto;
+				padding-top: 10px;
+				padding-bottom: 10px; 
+				font-size:16px;
+				color: white;				
+			}
+
+			.projectInputs
+			{
+				padding: 14px;
+				text-align: center;
+			}
+
+			.descInput
+			{
+				size: 512;
+				width:100%;
+				height: 60px;
+			}
+			.up
+			{
+				width:100%;
+				background-color: #34495E;
+			}
+
+			img
+			{
+				display: table;
+				margin: -50px auto -50px auto;
+				width: 280px;
+				height: 280px;
+		
+			}
+
+			#logo
+			{
+				width: 100%;
+				padding-top: 0px;
+				margin: 0px;
+			}
+
+
+			
+		</style>
+
+		<script src = "src/JavaScript/JQuery.js"></script>
+		<script>
+
+		function listProject()
+		{
+			$.ajax({
+			url:"src/controlProject.php?listar=1.php",
+			type: 'GET',
+			success: function(data)
+			{
+				resp = JSON.parse(data);
+				$("td").remove();
+				for(i=0; i<resp.length; i++)
+				{
+					row = $("<tr>");
+					cols = "";
+					cols += "<td>"+resp[i].descr+"</td>";
+					cols += "<td>Parado</td>";
+					cols += "<td>Nulo</td>";
+					row.append(cols);
+					$("#tableProject").append(row);
+				}
+				
+			}
+			});
+
+		}
+
+		$(document).ready( 
+			function()
+			{ 
+				listProject();
+				$("#foot").load("rodape.html");
+				$("#addProject").submit(function()
+				{
+					var formData = new FormData(this);
+					formData.append('file', $("#file")[0].files[0]);
+					formData.append('desc', $('#desc').val());
+					formData.append('cadastro',"cadastro");
+					$.ajax({
+						url:"src/controlProject.php",
+						type: 'POST',
+						data: formData,
+						processData: false,
+    						contentType: false
+					});
+				});
+		});
+		</script>
+	</head>
+
+	<body>
+		<div id = "logo">
+			<img src = "/Imagens/logo.png">
+		</div>
+
+		<h4 class = "title">Projetos</h4>
+		<div class = "info">
+
+			
+			<div class = "manager">
+				<div class = "list">
+					<div class = "up">
+						<h5>Atuais</h5>
+					</div>
+
+					<table id = "tableProject" class = "status">
+						<tr>
+							<th>Descrição</th>
+							<th>Status</th>
+							<th>Resultados</th>
+						</tr>
+					</table>
+				</div>
+
+				<div class = "add">
+					<div class = "up">
+						<h5>Novo</h5>
+					</div>
+
+					<form id = "addProject" action = "#" method = "post" enctype="multipart/form-data">
+					<div class = "projectInputs">
+					Descrição: 
+						<textarea class = "descInput" id = "desc" name = "desc">
+						</textarea>
+					</div>
+					<div class = "projectInputs">
+					Programa: <input type = "file" name = "file" id = "file">
+					</div>
+					<div class = "projectInputs">
+						<input class = "buttons" type = "submit" value = "Cadastro" name = "cadastrar">
+					</div>
+					</form>
+				</div>
+			</div>
+					
+		</div>
+
+		<h4 class = "title">Voluntários</h4>
+
+		<div class = "info">
+		
+			<div class = "manager">
+				<div class = "select">
+					<div class = "up">
+						<h5>Gerenciar</h5>
+					</div>
+
+					<table class = "status">
+						<tr>
+							<td>Id</td>
+							<td>Nome</td>
+							<td>E-mail</td>
+							<td>Status</td>
+							<td>% de erros</td>
+							<td>Bloquear</td>
+						</tr>
+					</table>
+
+				</div>
+			</div>					
+		</div>
+
+		<div id = "foot">
+		</div>
+
+	</body>
+</html>	
