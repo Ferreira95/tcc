@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <mysql/mysql.h>
+#include <confuse.h>
 
 #define BUFFER 512
 #define LOGIN "SELECT password FROM volunteer WHERE name = ?;\0"
@@ -57,16 +58,31 @@ void param_config(MYSQL_BIND *param, int type, char *buffer, int b_length, unsig
 
 int base_config(MYSQL *connect) // Inicialização e configuração do banco
 {
-//	char addr[30];
-//	char port[10];
-//	char user[30];
-//	char pass[30];
-//	char base[30];
-	MYSQL_RES *result;
+	char *addr;
+	char *port;
+	char *user;
+	char *pass;
+	char *base;
+
+	cfg_t *cfg;
+	cfg_opt_t opts[] =
+	{
+		CFG_SIMPLE_STR("DB_addr", &addr),
+		CFG_SIMPLE_STR("DB_port", &port),
+		CFG_SIMPLE_STR("DB_user", &user),
+		CFG_SIMPLE_STR("DB_pass", &pass),
+		CFG_SIMPLE_STR("DB_base", &base),
+		CFG_END()
+	};
+	cfg = cfg_init(opts, 0);
+	cfg_parse(cfg, "server.conf");
 
 	mysql_init(connect);
-	if(mysql_real_connect(connect, "localhost", "", "", "paralel_net", 0, NULL, 0 ))
+	if(mysql_real_connect(connect, addr, user, pass, base, 0, NULL, 0 ))
+	{
+		cfg_free(cfg);
 		return 1;
+	}
 	else
 		exit (0);
 }
@@ -91,22 +107,18 @@ int login_user(MYSQL *connect, char *name, char *password, unsigned long int d_l
 		perror(mysql_error(connect));
 		return -1;
 	}
-	perror("2");
+
 	if(mysql_num_rows(result) < 0)
 	{
 		perror("Result");
 		return -1;
 	}
-	perror("3");
+
 	if( (row = mysql_fetch_row(result)) == NULL)
 	{
 		perror("Fetch Row");
 		return -1;
 	}
-	int unsigned long *num;
-	num = mysql_fetch_lengths(result);	
-	perror("ok");
-	write(STDOUT_FILENO, row[0], num[0]);
 }
 
 
