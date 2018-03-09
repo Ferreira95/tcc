@@ -8,7 +8,6 @@
 
 #define PASS_LEN 128
 #define BUFFER 512
-#define LIMIT 3
 #define USER_CHECK "SELECT user FROM session WHERE hash = ?\0"
 #define HASH_USER "REPLACE INTO session(user, hash) VALUES (?,?)\0"
 #define LOGIN "SELECT  id FROM volunteer WHERE name = ? and password = ? LIMIT 1;\0"
@@ -115,6 +114,8 @@ int statement_exe(MYSQL *connect, char *query, MYSQL_BIND *param, MYSQL_BIND *re
 		perror("Rows");
 		return -1;
 	}
+
+	mysql_stmt_close(stmt);
 	return 0;
 }
 
@@ -148,21 +149,16 @@ int hash_user(MYSQL *connect, char *hash, int id_user) // Inserção do hash id 
 	bind_config(&param[0], MYSQL_TYPE_LONG, (char *)&id_user, 0, 0);
 	bind_config(&param[1], MYSQL_TYPE_STRING, hash, sizeof(*hash), &d_length);
 
-	for( i=0; i < LIMIT; i++)
-	{
-		uuid_generate(uuid);
-		uuid_unparse_lower(uuid, hash);
-		d_length = strlen(hash);
+	uuid_generate(uuid);
+	uuid_unparse_lower(uuid, hash);
+	d_length = strlen(hash);
 
-		if(statement_exe(connect, HASH_USER, param, NULL) < 0)
-		{
-			uuid_clear(uuid);
-			continue;	
-		}
-		break;
+	if(statement_exe(connect, HASH_USER, param, NULL) < 0)
+	{
+		uuid_clear(uuid);
+		return -1;	
 	}
-	if(i == LIMIT)
-		return -1;
+	
 	return 0;
 }
 int login_user(MYSQL *connect, char *name, char *password, char *hash) // Login inicial, nova session
@@ -173,7 +169,7 @@ int login_user(MYSQL *connect, char *name, char *password, char *hash) // Login 
 	MYSQL_ROW row;
 
 	name_length = strlen(name);
-	pass_length = 0;
+	pass_length = strlen(password);
 
 	bind_config(&param[0], MYSQL_TYPE_STRING, name, sizeof(*name), &name_length);
 	bind_config(&param[1],MYSQL_TYPE_STRING, password, sizeof(*password), &pass_length);
@@ -185,16 +181,12 @@ int login_user(MYSQL *connect, char *name, char *password, char *hash) // Login 
 		perror("Login");
 		return -1;
 	}
-
-	char tst[30];
-	snprintf(tst, 29,"%llu", id);
-	write(STDOUT_FILENO, tst, 30);
 	
-//	if(hash_user(connect, hash, id) < 0)
-//	{
-//		perror("Hash insert");
-//		return -1;
-//	}
+	if(hash_user(connect, hash, id) < 0)
+	{
+		perror("Hash insert");
+		return -1;
+	}
 
 	return 0;
 }
