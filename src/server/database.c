@@ -9,7 +9,7 @@
 #define PASS_LEN 128
 #define BUFFER 512
 #define USER_CHECK "SELECT user FROM session WHERE hash = ?\0"
-#define HASH_USER "REPLACE INTO session(user, hash) VALUES (?,?)\0"
+#define HASH_USER "INSERT INTO session(user, hash, date) VALUES (?,?,now())\0"
 #define LOGIN "SELECT  id FROM volunteer WHERE name = ? and password = ? LIMIT 1;\0"
 #define INSERT_DATA "INSERT INTO data(value, project) VALUES (?,?)\0"
 #define INSERT_RESULT "INSERT INTO result(key, value) VALUES (?,?)\0"
@@ -18,33 +18,18 @@
 
 int base_config(MYSQL *connect) // Inicialização e configuração do banco
 {
-	char *addr;
-	char *port;
-	char *user;
-	char *pass;
-	char *base;
-
-	cfg_t *cfg;
-	cfg_opt_t opts[] =
-	{
-		CFG_SIMPLE_STR("DB_addr", &addr),
-		CFG_SIMPLE_STR("DB_port", &port),
-		CFG_SIMPLE_STR("DB_user", &user),
-		CFG_SIMPLE_STR("DB_pass", &pass),
-		CFG_SIMPLE_STR("DB_base", &base),
-		CFG_END()
-	};
-	cfg = cfg_init(opts, 0);
-	cfg_parse(cfg, "db.conf");
+	const char addr[] = "localhost";
+	const char port[] = "0";
+	const char user[] = "master";
+	const char pass[] = "senha5";
+	const char base[] = "paralel_net";
 
 	mysql_init(connect);
-	if(mysql_real_connect(connect, addr, user, pass, base, 0, NULL, 0 ))
-	{
-		cfg_free(cfg);
-		return 1;
-	}
-	else
-		exit (0);
+	mysql_real_connect(connect, addr, user, pass, base, 0, NULL, 0 );
+
+	if(connect)
+		return 0;
+	return -1;
 }
 
 		//---------------- Funções de pesquisa, config de parâmetros e resultados -----------
@@ -91,12 +76,12 @@ int statement_exe(MYSQL *connect, char *query, MYSQL_BIND *param, MYSQL_BIND *re
 		return -1;
 	}
 
-	if(result == NULL)
+	if(!result) // Sem retorno
 		return 0;
 			
-		// -------- EXE sem retorno ---------------	
+		// -------- Com retorno ---------------	
 
-	if((meta = mysql_stmt_result_metadata(stmt)) == NULL)
+	if(!(meta = mysql_stmt_result_metadata(stmt)))
 	{
 		perror(mysql_stmt_error(stmt));
 		perror("store");
@@ -109,7 +94,7 @@ int statement_exe(MYSQL *connect, char *query, MYSQL_BIND *param, MYSQL_BIND *re
 		return -1;
 	}
 
-	if(mysql_stmt_fetch(stmt) == 1)
+	if(mysql_stmt_fetch(stmt))
 	{
 		perror("Rows");
 		return -1;
@@ -220,15 +205,3 @@ int file_recovery(MYSQL *connect, int project, char *path) // Recuperação do p
 
 	return statement_exe(connect, RECOVERY_PROJECT, param, NULL);
 }
-
-int main() // database start
-{
-	char hash[290];
-	MYSQL connect;
-	base_config(&connect);
-//	data_insert(&connect, "test1\0",5, 19);
-//	hash_user(&connect, hash, 5);	
-	login_user(&connect, "ferreira\0", "alfa12\0", hash);
-//	user_check(&connect, "2a229166-5e14-4136-91dc-45998e0668ec\0");
-}
-

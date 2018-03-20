@@ -1,28 +1,65 @@
-#include "server.h"
+#include "network.h"
+#include "database.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <arpa/inet.h>
 
 #define HEAD_LEN 512
+#define HASH_LEN 40
 #define MAX_PARAM 5
+#define LOG_PARAM 4
+#define RESULT_PARAM 5
+#define DATA_PARAM 3
+#define PROG_PARAM 3
 
-typedef int proto(char **params);
+typedef void proto(char **params, char *resp);
 
-int login_user(char **param)  //(char *name, char *password, char *resp) // Login do usuário
+void zero(char *head_final)
 {
-	perror("LOGIN_TESTE");
-	// checagem no banco
-	// se verdadeiro adiciona hash, id a tabela
+	int i;
+	char *str;
+
+	i = strlen(head_final);
+	str = head_final;
+	str+=i;
+	memset(str, 0, HEAD_LEN - i);
+	write(STDOUT_FILENO, head_final, HEAD_LEN);
 }
 
-int result(char **param)  //(char *hash_project, char *res, char *resp) // Recebe os resultados
+void resp_config(char *type, char **param, int len, char *resp)
+{
+	int i;
+	strncat(resp, type, strlen(type));
+	for(i = 0; i < len; i++)
+	{
+		strncat(resp, param[i], strlen(param[i]));
+		strncat(resp, "\n", 1);
+	}
+	strncat(resp, "\0", 1);
+}
+
+void  login(char **param, char *resp)  //(char *name, char *password, char *resp) // Login do usuário
+{
+	char hash[HASH_LEN];
+	char *param_resp[1];
+	MYSQL db;
+	base_config(&db);
+	if(login_user(&db, param[1], param[2], hash) < 0)
+	{
+		resp_config("login_failure", param_resp, 0, resp);
+		return;
+	}
+	param_resp[0] = hash;
+	resp_config("login_ok\n\0", param_resp, 1, resp);	
+}
+
+void result(char **param, char *resp)  //(char *hash_project, char *res, char *resp) // Recebe os resultados
 {
 	perror("RESULTADO_TESTE");
 }
 
-int req_data(char **param) //(char *hash_id, char *resp) // Responde a requisição dos dados para processo
+void req_data(char **param, char *resp) //(char *hash_id, char *resp) // Responde a requisição dos dados
 {
 	perror("REQUISIÇão TESTE");
 	//Verifica o hash no banco
@@ -31,7 +68,7 @@ int req_data(char **param) //(char *hash_id, char *resp) // Responde a requisiç
 	//adiciona os dados a resp
 }
 
-int req_prog(char **param) //(char *hash_id, char *resp) // Responde a requisição do software para trabalho
+void req_prog(char **param, char *resp) //(char *hash_id, char *resp) // Responde a requisição do software
 {
 	//verifica o hash
 	//verifica o caminho
@@ -39,16 +76,17 @@ int req_prog(char **param) //(char *hash_id, char *resp) // Responde a requisiç
 	//envia o arquivo
 }
 
-void transmission(int server) // realiza a troca de dados entre servidor e cliente
+void main() // realiza a troca de dados entre servidor e cliente
 {
-	proto *type;
+	int server,  param_len, client;
 	char head[HEAD_LEN], resp[HEAD_LEN], *param[MAX_PARAM], *data;
-	int i, j, client;
+	proto *type;
 
-	i = 0;
+	server = new_server();
+	param_len = 0;
 	type = NULL;
-	
-	client = new_client(server);
+
+	client = new_client(server);	
 	if(rec_msg(client, head, HEAD_LEN) != 0) //Recebe o head padrão de tamanho 512
 	{
 		perror("no data");
@@ -57,34 +95,31 @@ void transmission(int server) // realiza a troca de dados entre servidor e clien
 	data = head;
 	do // Trata a string recebida
 	{
-		if( (param[i] = strsep(&data,"\n")) == NULL)
+		if( (param[param_len] = strsep(&data,"\n")) == NULL)
 		       break;
-		i++;
+		param_len++;
 
-	}while(i < MAX_PARAM);
-		
-	if( i == 0) // Verificação de tipo e quantidade de parâmentros
-		return;
+	}while(param_len < MAX_PARAM);
 
 	if(strcmp(param[0], "login") == 0)
 	{
-		if(i == 4)
-			type = login_user;
+		if(param_len == LOG_PARAM)
+			type = login;
 	}
 
 	else if(strcmp(param[0], "rec_data") == 0)
 	{
-		if(i == 3)
+		if(param_len == DATA_PARAM)
 			type = req_data;
 	}	
 	else if(strcmp(param[0], "req_prog") == 0)
 	{
-		if(i == 3)
+		if(param_len == PROG_PARAM)
 			type = req_prog;
 	}
 	else if(strcmp(param[0], "result") == 0)
 	{
-		if(i == 5)
+		if(param_len == RESULT_PARAM)
 			type = result;
 	}
 
@@ -93,18 +128,9 @@ void transmission(int server) // realiza a troca de dados entre servidor e clien
 		perror("Error");
 		return;
 	}
-	
-	if(type(param) > 0)
-	{
-		send_msg(client, resp, sizeof(resp));
-		return;
-	}
-	
+
+	type(param, resp);
+	zero(resp);
+	send_msg(client, resp, HEAD_LEN);
 }
 
-int main()
-{
-	int server;
-	server = new_server();
-	transmission(server);
-}
