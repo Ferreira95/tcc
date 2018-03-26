@@ -1,16 +1,26 @@
-<div class = "menuBox">
-	<ul>
-		<menu><a href = "index.html">SPN</a></menu>
-		<menu><a href = "#">Projetos</a></menu>
-		<menu><a href = "loginAdmin.html">Restrito</a></menu>
-		<menu><a href = "#">Sobre</a></menu>
-	</ul>
-</div>
+<div>
+<nav class="navbar navbar-expand-lg navbar-collapse text-info bg-light justify-content-between p-0 m-0">
+
+
+		<ul class="navbar-nav mt-0">
+			<li class="nav-item mr-sm-4"><a class="nav-link" href = "index.html">SPN</a></li>
+			<li class="nav-item mr-sm-4"><a class="nav-link" href = "project.html">Projetos</a></li>
+			<li class="nav-item mr-sm-4"><a class="nav-link" href = "volunteer.html">Voluntários</a></li>
+			<li class="nav-item mr-sm-4"><a class="nav-link" href = "loginAdmin.html">Restrito</a></li>
+			<li class="nav-item mr-sm-4"><a class="nav-link" href = "sobre.html">Sobre</a></li>		
+		</ul>
+		<form name = "formVol" action = "src/controlVolunteer.php" method = "post" class="form-inline  mt-3">
+			<div class="form-group mr-sm-2">
+				<label for="email" class = "sr-only">E-mail:</label>
+	 				<input type = "email" name = "email" class="form-control form-control-sm" placeholder = "E-mail" required>
+			</div>
+			<div class="form-group mr-sm-2">
+			<label for="senha" class = "sr-only">Senha: </label>
+				<input type = "password" name = "password" class="form-control form-control-sm" placeholder = "Senha" required>
+			</div>
 			
-<div class = "searchBox">
-	<form action = "pequisa.php" method = "get">
-		<input class = "search" type = "search" name = "search" >
-		<input type = "image" src = "Imagens/pesquisa.png">
-	</form>
+			<button type="submit" name = 'entrar' class="btn btn btn-outline-info btn-sm mr-sm-1">Entrar</button>
+		</form>					
+</nav>		
 </div>
 

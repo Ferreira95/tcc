@@ -1,7 +1,10 @@
 <?php
-require "Classes/Connect.php";
+require "Classes/Project.php";
 
-	session_start();
+//	session_start();
+	$prj = new Project();
+	echo json_encode($prj->listarMany(3));
+		
 	if(isset($_SESSION['adminID']))
 	{
 		if(isset($_POST['cadastro']))
@@ -13,30 +16,14 @@ require "Classes/Connect.php";
 				{
 					if( isset($_POST['desc']))
 					{
-						$conn = new Connect();
-						$stmt = $conn->pdo->prepare("INSERT INTO project(descr, path, admin) VALUES (:descr, :path, :admin)"); 
-						$stmt->bindValue(':path', $path); // Evitar injection
-						$stmt->bindValue(':descr', $_POST['desc']);
-						$stmt->bindValue(':admin', $_SESSION['adminID']);
-						$stmt->execute();
+						insert($_SESSION['adminID'], $_POST['desc'], $path);
 					}
 				}
 			}
 		}
-		else if(isset($_GET['listar']))
+		else if(isset($_GET['listMany']))
 		{
-			$conn = new Connect();
-			$stmt = $conn->pdo->prepare("SELECT * FROM project where admin = :id"); 
-			$stmt->bindValue(':id', $_SESSION['adminID']); // Evitar injection
-			$stmt->execute();
-			$row = $stmt->rowCount();
-			if($row > 0)
-			{
-				$result = $stmt->fetchAll();
-				$result = json_encode($result);
-				echo $result;
-			} 
-			
+			echo json_encode($prj->listarMany(5));
 		}
 	}
 

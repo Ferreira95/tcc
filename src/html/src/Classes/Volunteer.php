@@ -34,4 +34,17 @@ class Volunteer extends User
 	public function update($id, $nome,$email, $password)
 	{
 	}
+
+	public function listMany()
+	{
+	        $stmt = $this->conn->pdo->prepare("select name as nome, count(user) as concl, volunteer.dt as cad_dt, result.dt as ult_dt from volunteer join result on (volunteer.id=user) group by user order by concl desc LIMIT 10"); 
+		$stmt->execute();
+		$exec = $stmt->rowCount();
+		if($exec)
+		{
+			$result = $stmt->fetchAll();
+			return $result;
+		} 
+		return false;	
+	}
 }

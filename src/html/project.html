@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>SPN - Home</title>
+		<title>SPN - Projetos</title>
 		<meta charset="utf-8">
     		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -9,11 +9,55 @@
 		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+		<style>
+		.chart
+		{
+			max-width: 880px;
+			margin: auto;
+		}
+		.desc
+		{
+			width:calc(100% - 420px);
+			float: right;
+		}
+	
+		</style>
+
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
 
 		<script src = "src/JavaScript/Chart.js"></script>
 		<script src = "src/JavaScript/JQuery.js"></script>
 		<script src = "src/JavaScript/Load.js"></script>
+		<script>
+			$(document).ready( 
+			function()
+			{ 
+				$.get("src/controlProject.php?listMany=1", 					function(data)
+				{
+  					let prjs = JSON.parse(data);
+					for(let i = 0; i < data.length; i++)
+					{
+						if(prjs[i]['processing'] > 0)
+							proc = prjs[i]['processing']*100/prjs[i]['data'];
+						else
+							proc = 0;
+						if(prjs[i]['result'] > 0)		
+							resu = prjs[i]['result']*100/prjs[i]['data'];
+						else
+							resu = 0;
+						let dt = 100 - proc - resu;
+						let cont = $("#prj"+i);
+						chartProject(dt, proc, resu, cont);
+
+						$("#desc"+i).append(prjs[i]['desc']);
+					}
+				});
+
+			});
+
+			
+		</script>
 	</head>
 
 	<body class = "bg-dark">
@@ -26,6 +70,31 @@
 
 		<div id = "center" class = "mt-2">
 			<div id = "conteudo" class = "card bg-dark text-light float-left border-dark" style = "width:calc(100% - 310px);">
+			<div class="carousel slide float-left " data-ride="carousel"  style="width:100%;">
+  				<div class="carousel-inner">
+					<div  class="carousel-item active">
+    						
+						<h5 id = "desc0" class = "card-header text-center ">
+						</h5>
+		
+						<canvas id = "prj0" class = "chart"></canvas>
+      					</div>	
+					<div  class="carousel-item ">
+    						
+						<h5 id = "desc1" class = "card-header text-center">
+						</h5>
+
+						<canvas id = "prj1" class = "chart"></canvas>
+      					</div>	
+					<div  class="carousel-item">
+    						
+						<h5 id = "desc2" class = "card-header text-center">
+						</h5>
+
+						<canvas id = "prj2" class = "chart"></canvas>
+      					</div>	
+  				</div>
+			</div>
 
 			</div>
 

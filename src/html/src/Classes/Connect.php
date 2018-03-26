@@ -6,7 +6,7 @@ class Connect
 	{
 		try
 		{
-			$this->pdo = new PDO('mysql:host=localhost;dbname=paralel_net', '', '');
+			$this->pdo = new PDO('mysql:host=localhost;dbname=paralel_net', 'master', 'senha5');
 			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		}
 		catch (PDOException $e)

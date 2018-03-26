@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>SPN - Cadastre-se</title>
+		<title>SPN - Scientifc Processing Network</title>
 		<meta charset="utf-8">
     		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -9,66 +9,90 @@
 		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
 
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
 		<script src = "src/JavaScript/Chart.js"></script>
 		<script src = "src/JavaScript/JQuery.js"></script>
+		
 		<script>
 			$(document).ready( 
 			function()
 			{ 
 				$("#top").load("menu.html");
+				//$("#head").load("login.html");
+				//$("#left").load("listaProjetos.html");
 				//$("#foot").load("rodape.html");
+				$.get("src/controlProject.php?listMany=1", function(data)
+				{
+  					let prjs = JSON.parse(data);
+					for(let i = 0; i < data.length; i++)
+					{
+						if(prjs[i]['processing'] > 0)
+							proc = prjs[i]['processing']*100/prjs[i]['data'];
+						else
+							proc = 0;
+						if(prjs[i]['result'] > 0)		
+							resu = prjs[i]['result']*100/prjs[i]['data'];
+						else
+							resu = 0;
+						let dt = 100 - proc - resu;
+						let cont = $("#prj"+i);
+						chartProject(dt, proc, resu, cont);
+
+						$("#desc"+i).append(prjs[i]['desc']);
+					}
+				});
 			});
-		
+
+			
 		</script>
 	</head>
 
-	<body class = "bg-dark">
-		<div id = "top">
+	<body>
+		<div id = "top" name = "menu" class ="menu">
 		</div>
 
-		<div id = "center">
+		<div id = "head">
+		</div>
 
-			<div id = "conteudo" class = "card bg-dark text-light float-left border-dark mt-2 " style = "width:calc(100% - 310px);">
-				<h5 class ="card-header text-center">Torne-se um Voluntário</h5>
-				<div class = "card-text">
-				<form action = "src/controlVolunteer.php" method = "post" class = "float-none mx-auto mt-2 " style="max-width:500px;"> 		<div class ="form-group row" >
-					<label for = "e-mail"> E-mail: </label>
-					<input class = "form-control" type = "email" name = "email" required>
-				</div>
-				<div class ="form-group row">
-					<label for = "senha">Senha:</label>
-					<input class = "form-control" type = "password" name = "password"  required>
-				</div>
-				<div class ="form-group row">
-					<label for = "nome" class = "">Nome: </label>
-					<input class = "form-control" type = "text" name = "name" required>
-				</div>
-				<div class = "row">
-					<button type="submit" name = "cadastrar" class="btn btn-outline-light mx-auto">Cadastrar</button>
-				</div>				
-				</form>
-				</div>
+		<div id = "center" class = "mt-2">
+			<div class="carousel slide float-left" data-ride="carousel"  style="width:calc(100% - 310px);">
+  				<div class="carousel-inner">
+					<div  class="carousel-item active">
+    						<canvas id = "prj0"></canvas>
+						<div id = "desc0">
+						</div>
+      					</div>	
+					<div  class="carousel-item ">
+    						<canvas id = "prj1"></canvas>
+						<div id = "desc1">
+						</div>
+      					</div>	
+					<div  class="carousel-item">
+    						<canvas id = "prj2"></canvas>
+						<div id = "desc2">
+						</div>
+      					</div>	
+  				</div>
 			</div>
-<div id = "cards" class = "card float-right border-0  bg-dark mt-2" style="max-width: 300px;">			
-				<div class = "card border-info text-center float-right  bg-light" style="width: 300px;">
+
+			<div id = "cards" class = "card float-right" style="max-width: 300px;">	
+			<div class = "card border-info text-center float-right" style="max-width: 300px;">
 				<h5 class = "card-header bg-info text-white">Torne-se um voluntário</h5>
 				<div class = "card-body">
 					<p class = "card-text">
-						Insira os dados e realize o cadastro no sistema, em seguida
-						baixe e instale o software para desktop. 
-						A partir dai faça o login
-						no desktop e seu trabalho esta concluído. </p>
+					Faça a diferença. Colabore com nosso sistema e assim auxilie
+					em pesquisas científicas de diversas áreas de conhecimento direto do
+					conforto de sua casa.</p>
 					<a href = "cadVol.html">
 						<button type="button" class="btn btn-outline-info">
-							Download
+							Cadastre-se
 						</button>
 					</a>
 				</div>
 			</div>
 
-			<div class = "card border-info text-center  bg-light float-right mt-2" style="width: 300px;">
+			<div class = "card border-info text-center float-right mt-2" style="max-width: 300px;">
 				<h5 class = "card-header bg-info text-white">Status geral</h5>
 				<div class = "card-body">
 					<p class = "card-text">
@@ -85,13 +109,11 @@
 				
 			</div>
 
-			</div>	
+				
 			</div>
-
 		</div>
 
-		<div id ="foot">
+		<div id = "foot">
 		</div>
 	</body>
 </html>
-
