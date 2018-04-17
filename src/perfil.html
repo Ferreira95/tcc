@@ -1,0 +1,224 @@
+<head>
+		<title>SPN - Perfil</title>
+		<meta charset="utf-8">
+    		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<link rel="stylesheet" href="src/Css/bootstrap.min.css">
+
+		
+		<script src = "src/JavaScript/JQuery.js"></script>
+
+		<script src="src/JavaScript/popper.min.js"></script>
+
+		<script src="src/JavaScript/bootstrap.min.js"></script>
+
+		<script src="src/JavaScript/Chart.bundle.min.js"></script>
+
+		<script src = "src/JavaScript/Chart.js"></script>
+		
+		<script>
+			$(document).ready( 
+			function()
+			{ 
+				$.get("src/controlProject.php?listAll=1",function(data)
+				{
+  					let prjs = JSON.parse(data);
+					for(i=0; i<prjs.length; i++)
+					{
+						row = $("<tr>");
+						cols = "";
+						cols += "<td><a class = 'projeto' data-toggle='modal' data-target='#projeto' href = '#' data-whatever='"+prjs[i].id+"'>"+prjs[i].title+"</a></td>";
+								
+						row.append(cols);
+						$("#table").append(row);
+					}
+				});
+
+				$.get("src/controlProject.php?listVol=1",function(data)
+				{
+  					let prjs = JSON.parse(data);
+					for(i=0; i<prjs.length; i++)
+					{
+						row = $("<tr>");
+						cols = "";
+						cols += "<td>"+prjs[i].title+"</td>";
+						cols += "<td>"+prjs[i].contrib+"</td>";
+						cols += "<td>"+prjs[i].last+"</td>";
+						row.append(cols);
+						$("#user").append(row);
+					}
+				});
+
+				$('.form').submit(function()
+				{
+					let dados = $(this).serialize();
+					$.post("src/controlVolunteer.php", dados,
+						function( data )
+						{
+							if(data == true)
+								alert("Sucesso");
+							else
+								alert("Falha ao realizar solicitação. Tente novamente");
+						}
+					);
+					return false;
+				});
+
+				$('#projeto').on('shown.bs.modal',function(event)
+				{
+					let target = $(event.relatedTarget);
+  					let id = target.data('whatever');
+					 
+					$.get("src/controlProject.php?listID=" + id, function(data)
+					{
+  						prj = JSON.parse(data);
+						$('#prj').html("");
+						$('#title').html(prj.title);
+						$('#descr').html(prj.descr);
+						$('#down').html("<a class = 'mx-auto' href = '" + prj.path + "'><button type='button' class='btn btn-outline-dark mx-auto mt-5'>Download</button> </a>");
+						let res = prj.result * 100 / prj.data;
+						chartProjectMin(100-res, res, $("#prj"));
+					});
+				});
+			
+			});
+		</script>
+
+
+</head>
+
+<body class = "bg-dark">
+
+
+<div id = "center" class = "mt-2">
+	<div id = "conteudo" class = "card bg-dark text-light float-left border-dark" style = "width:calc(100% - 310px);">
+		<div class = "card-header text-center " style = "max-height: 49px;">
+			<div class="btn-group float-left">
+  				<button type="button" class="btn btn-outline-light dropdown-toggle mt-1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    			
+  			</button>
+  			<div class="dropdown-menu">
+    				<a class="dropdown-item" data-toggle="modal" data-target="#edite" href = "#">Alterar senha</a>
+    				<a class="dropdown-item" data-toggle="modal" data-target="#fale" href = "#">Fale conosco</a>
+    				<a class="dropdown-item" href="src/controlVolunteer.php?sair=1">Sair</a>
+    			</div>
+</div>
+			<h5 class = "mx-auto" style = "max-width: 80%;">Seus projetos</h5>
+		</div>
+		<div class = "card-text text-center mt-1">
+
+			<table id = "user" class = "table table-dark text-center" style = "max-height = 90%;">
+				<tr>
+					<th>Projeto</th>
+					<th>Nº de contribuições</th>
+					<th>Ultima em</th>
+				<tr>
+			</table>
+
+		</div>
+	</div>
+
+	<div id = "cards" class = "card float-right border-0  bg-dark " style="max-width: 300px;">			
+		<div class = "card border-info text-center float-right  bg-light" style="width: 300px;">
+			<h5 class = "card-header bg-info text-white">Passos</h5>
+			<div class = "card-body">
+				<p class = "card-text">
+					Selecione um projeto de interesse na lista abaixo,
+					acesse seu link e faça download do software de precessamento. 
+					Instale e abra o programa, em seguida faça o login do SPN 
+					no desktop e seu trabalho esta concluído. </p>
+			</div>
+		</div>
+	
+		<div class = "card border-info text-center  bg-light float-right mt-2" style="width: 300px; max-height: 310px; min-height: 300px;">
+			<h5 class = "card-header bg-info text-white">Projetos</h5>
+			<div class = "card-body" style = "overflow-y: auto;">
+				<table id = "table" class = "table table-light">
+					</table>
+
+			</div>
+				
+		</div>
+
+	</div>	
+</div>
+
+<div class="modal fade" id="edite" tabindex="-1" role="dialog" aria-labelledby="Alterar" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" >Alterar senha</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+	<form id = "edite_form" class = "form float-none mx-auto mt-2 " style="max-width:300px;"> 		
+				<div class ="form-group row">
+					<label for = "senha">Senha atual:</label>
+					<input class = "form-control" type = "password" name = "password"  required>
+				</div>
+				<div class ="form-group row">
+					<label for = "novaSenha">Nova senha:</label>
+					<input class = "form-control" type = "password" name = "newpassword"  required>
+				</div>
+				<div class ="form-group row">
+					<button name = "altSenha" value = "altSenha" type = "submit" class="btn btn-outline-dark mt-4 mx-auto">Alterar</button>
+				</div>
+				</form>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+
+<div class="modal fade" id = "fale" tabindex="-1" role="dialog" aria-labelledby="fele" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Fale Conosco</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id = "fale_form" class = "form">
+		<div class="form-group">
+			<label for="mensagem">Digite sua mensagem</label>
+    			<textarea name = "mensagem" class="form-control" id="mensagem" rows="3"></textarea>
+ 		</div>
+
+		<div class ="form-group row">
+			<button name = "fale" value = "fale" type = "submit" class="btn btn-outline-dark mt-4 mx-auto">Enviar</button>
+		</div>
+
+		
+	</form>
+      </div>
+     </div>
+  </div>
+</div>
+
+<div class="modal fade" id = "projeto" tabindex="-1" role="dialog" aria-labelledby="fele" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id = "title" class="modal-title"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" >
+		<canvas id = "prj" class = "chart"></canvas>		
+		<p class = "mt-2" id = "descr"  style = "max-height: 140px; overflow-y: auto;">
+			
+		</p>
+		<div id = "down" class = "form-group row" ></div>
+      </div>
+     </div>
+  </div>
+</div>
+

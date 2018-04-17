@@ -1,0 +1,90 @@
+<html>
+	<head>
+		<title>SPN - Área do Administrador</title>
+		<meta charset="utf-8">
+    		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<link rel="stylesheet" href="src/Css/bootstrap.min.css">
+
+		<script src="src/JavaScript/popper.min.js"></script>
+
+		<script src="src/JavaScript/bootstrap.min.js"></script>
+
+		<script src="src/JavaScript/Chart.bundle.min.js"></script>
+
+		<script src = "src/JavaScript/Chart.js"></script>
+		
+		<script src = "src/JavaScript/JQuery.js"></script>
+		<script src = "src/JavaScript/JQuery.js"></script>
+		<script>
+
+		function listProject()
+		{
+			$.ajax({
+			url:"src/controlProject.php?listAd=1",
+			type: 'GET',
+			success: function(data)
+			{alert(data);
+				resp = JSON.parse(data);
+				$("td").remove();
+				for(i=0; i<resp.length; i++)
+				{
+					row = $("<tr>");
+					cols = "";
+					cols += "<td>"+resp[i].descr+"</td>";
+					cols += "<td>Parado</td>";
+					cols += "<td>Nulo</td>";
+					row.append(cols);
+					$("#tableProject").append(row);
+				}
+				
+			}
+			});
+
+		}
+
+		$(document).ready( 
+			function()
+			{ 
+				listProject();
+				$("#addProject").submit(function()
+				{
+					var formData = new FormData(this);
+					formData.append('file', $("#file")[0].files[0]);
+					formData.append('desc', $('#desc').val());
+					formData.append('cadastro',"cadastro");
+					$.ajax({
+						url:"src/controlProject.php",
+						type: 'POST',
+						data: formData,
+						processData: false,
+    						contentType: false
+					});
+				});
+		});
+		</script>
+	</head>
+
+	<body class = "bg-light">
+			<div id = "conteudo" class = "card   float-left border-dark" style = "min-width:300px; width:100%;">
+				<h3 class ="card-header text-center bg-dark text-light">Gerenciamento de projetos</h3>
+				<div class = "card-text">
+
+					<table id = "tableProject" class = "table text-center">
+						<tr>
+							<th>Título</th>
+							<th>Status</th>
+							<th>Voluntários</th>
+							<th>Editar dados</th>
+							<th>Modificar Software</th>
+							<th>Modificar Sites</th>
+							<th>Gerar Relatótio</th>
+						</tr>
+					</table>
+
+				</div>
+			</div>
+
+	
+	</body>
+</html>	

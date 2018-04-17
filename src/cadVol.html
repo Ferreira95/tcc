@@ -1,0 +1,131 @@
+<html>
+	<head>
+		<title>SPN - Cadastre-se</title>
+		<meta charset="utf-8">
+    		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<link rel="stylesheet" href="src/Css/bootstrap.min.css">
+
+		<script src="src/JavaScript/popper.min.js"></script>
+
+		<script src="src/JavaScript/bootstrap.min.js"></script>
+
+		<script src="src/JavaScript/Chart.bundle.min.js"></script>
+
+		<script src = "src/JavaScript/Chart.js"></script>
+		
+		<script src = "src/JavaScript/JQuery.js"></script>
+		
+		<script>
+			$(document).ready( 
+			function()
+			{ 
+				$("#top").load("menu.html");
+				//$("#foot").load("rodape.html");
+			});
+		
+		</script>
+	</head>
+
+	<body class = "bg-dark font">
+		<div id = "top">
+		</div>
+
+		<div id = "center"  style="min-width: 300px;">
+			<div id = "conteudo" class = "card bg-dark text-light float-left border-dark mt-2" style = "min-width:300px; width:calc(100% - 310px);">
+				<h5 class ="card-header text-center">Torne-se um Voluntário</h5>
+				<div class = "card-text">
+
+				<form action = "src/controlVolunteer.php" method = "post" class = "float-none mx-auto mt-2 " style="max-width:600px;">
+  					<div class="form-row">
+
+    						<div class="form-group col-md-6">
+      							<label for="name">Nome</label>
+      							<input type="text" class="form-control" name="name" placeholder="Nome ou apelido" required>
+    						</div>
+
+    						<div class="form-group col-md-6">
+      							<label for="Date">Data de Nascimento</label>
+      							<input type="date" class="form-control" name="date" placeholder="Data de nascimento" required>
+    						</div>
+					</div>
+  					<div class="form-group ">
+      						<label for="email">Email</label>
+      						<input type="email" class="form-control" name="email" placeholder="Email" required>
+    					</div>
+
+					<div class="form-row">
+    						<div class="form-group col-md-6">
+      							<label for="pass">Senha</label>
+      							<input type="password" class="form-control" name = "password" placeholder="Mínimo de 8 caracteres" required>
+    						</div>
+
+    						<div class="form-group col-md-6">
+      							<label for="pass">Confirme a senha</label>
+      							<input type="password" class="form-control" name = "password2" placeholder="Confirme" required>
+    						</div>
+  					</div>
+
+					<div class="form-row">
+    						<div class="form-group col-md-6">
+      							      <label for="Escola">Escolaridade</label>
+							      <select name="escoladidade" class="form-control">
+        								<option selected>...</option>
+        								<option>...</option>
+      								</select>
+
+    						</div>
+
+    					</div>
+					<div class = "row">
+						<button type="submit" name = "cadastrar" class="btn btn-outline-light mx-auto mt-4">Cadastrar</button>
+					</div>				
+
+				</form>
+				</div>
+			</div>
+
+			<div id = "cards" class = "card float-right border-0  bg-dark mt-2" style="max-width: 300px;">			
+				<div class = "card border-info text-center float-right  bg-light" style="width: 300px;">
+				<h5 class = "card-header bg-info text-white">Torne-se um voluntário</h5>
+				<div class = "card-body">
+					<p class = "card-text">
+						Insira os dados e realize o cadastro no sistema, em seguida
+						baixe e instale o software ou acesse um dos sites da lista. 
+						A partir dai faça o login
+						e seu trabalho esta concluído. </p>
+					<a href = "cadVol.html">
+						
+					</a>
+				</div>
+			</div>
+
+			<div class = "card border-info text-center  bg-light float-right mt-2" style="width: 300px;">
+				<h5 class = "card-header bg-info text-white">Status geral</h5>
+				<div class = "card-body">
+					<p class = "card-text">
+						Acompanhe o status de nossas pesquisas e projetos,
+						bem como a contribuição de nossos
+ 						voluntários cadastrados.
+					</p>
+					<a href = "#">
+						<button type="button" class="btn btn-outline-info">
+							Estatísticas
+						</button>
+					</a>
+
+				</div>
+				
+			</div>
+
+			</div>	
+			</div>
+
+		
+		
+		<div id ="foot">
+		</div>
+	</body>
+</html>
+
+

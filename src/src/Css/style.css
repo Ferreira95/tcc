@@ -1,0 +1,231 @@
+body
+{
+	padding: 0px;
+	margin: 0px;
+	background-color: white;/*#222*/;
+	font-family: sans-serif;
+}
+
+
+#top
+{
+	height: 30px;
+	width: 100%;
+	min-width: 800px;
+	background-color: #34495E;
+	color: #60778F;
+	padding: 0px;
+	margin: 0px;	
+}
+
+.searchBox
+{
+	float: right;
+	height: 26px;
+	margin-top: 4px;
+	margin-right: 15px;
+}
+
+.search
+{
+	margin: auto;
+	vertical-align: top;
+	border-radius:10px;
+	height:22px;
+}
+
+.menuBox
+{
+	float: left;
+	height: 30px;
+	margin-top: 5px;
+	position: absolute;
+	z-index: 1;
+
+}
+
+#top ul
+{				
+	float: left;
+	margin: 0px;
+	padding: 0px;
+	height:30px;
+}
+
+#top menu
+{
+	display: inline;
+	margin: 0px;
+	padding: 0px 45px 0px 0px;
+	font-size: 14px;	
+	
+}
+
+menu a
+{
+	size: 25px;
+	text-align: middle;
+	padding: 5px 0px 0px 20px; 
+	margin:0;
+	border: 0px solid #f00; 
+	text-decoration: none;
+	color: white;
+	border-radius:5px;
+}
+
+menu a:hover 
+{
+	color: #A4BAD1; 
+}
+
+#head
+{
+	min-width: 800px;
+	width: 100%;
+	height:150px;
+	background-color: white;
+}
+
+.login
+{
+	float: right;
+	width: 280px;
+	color: #34495E;
+	font-size: 16px;
+	padding: 4px;
+}
+
+.inputs
+{
+	float: left;
+	clear: both;
+	padding-top: 10px;
+	margin: 0px;
+	width: 100%;
+}
+	
+.inputButtons
+{
+	width: 100%;
+	margin: auto;
+}
+	
+.buttons
+{
+	font-size: 16px;
+	background-color: #34495E;
+	color: white;
+	display: table;
+	margin: auto;
+	width: 80px;
+	height: 35px;
+}
+
+#center
+{
+	min-width: 800px;
+	width: 100%;
+	min-height:400px;
+	height: 60%;
+}
+	
+#conteudo
+{
+	float: left;
+	width: calc(100% - 350px);
+	display: table;
+	margin-left: 20px;
+	color: #34495E;
+	border: 2px solid #34495E;
+	height: 360px;
+	padding: 2px; 			
+}
+
+
+
+#heavy
+{
+	float: right;
+	width: 260px;
+	padding: 14px;
+	background-color: #34495E;
+	color: white;
+	font-size: 15px;
+	line-height: 25px;
+	height: 340px;
+	text-align: justify;
+}
+
+#left
+{
+	float: left;
+	height: 360px;
+	width: 220px;
+	background-color: white;
+	color: #34495E;
+	border: 2px solid #34495E;
+	padding: 2px;
+}
+
+#left h4
+{
+	text-align: center;
+	border-bottom: 2px solid #34495E;	
+}
+
+
+#heavy h4
+{
+	text-align: center;
+	border-bottom: 2px solid white;
+}
+
+#heavy a
+{
+	display: table;
+	margin: auto;
+	padding: 40px;
+	font-size: 20px;
+	text-align: middle;
+	border: 0px solid #f00; 
+	text-decoration: none;
+	color: white;
+	border-radius:5px;
+}
+
+.logo
+{
+	position: absolute;
+	float: left;
+	width: 200px;
+	height: 100%;
+	z-index: 0;
+}
+
+.logo img
+{
+	width: 200px;
+	height: 200px;
+	margin: -30px -20px -30px -8px;
+	float: left;
+}
+
+#heavy  a:hover 
+{
+	color: #A4BAD1; 
+}
+
+			
+#foot
+{
+	min-width: 800px;
+	height: 60px;
+	background-color: white;
+	color: #34495E;
+	text-align: center;
+	font-size:14px;
+	margin-top:40px;
+}
+
+
+
